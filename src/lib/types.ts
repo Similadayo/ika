@@ -1,5 +1,16 @@
 export type DocumentType = 'pdf' | 'doc' | 'notion' | 'sheet';
 
+export type Workspace = {
+  id: string;
+  name: string;
+  documentCount: number;
+};
+
+export type Conversation = {
+  id: string;
+  title: string;
+  updatedAt: string;
+};
 export type Document = {
   id: string;
   title: string;

@@ -80,6 +80,65 @@ export const generateMockRagResponse = async (query: string): Promise<ChatRespon
     };
   }
 
+  // Edge Case 1: Conflicting Information
+  if (lowerQuery.includes('pto') || lowerQuery.includes('conflicting')) {
+    const doc1 = mockDocuments.find(d => d.title.includes('SOP')) || mockDocuments[0];
+    const doc2 = mockDocuments.find(d => d.title.includes('Playbook')) || mockDocuments[1];
+
+    const sources: Source[] = [
+      {
+        id: 'src-conf-1',
+        documentId: doc1.id,
+        documentTitle: '2023 Employee Handbook',
+        section: 'Section 3: Time Off',
+        excerpt: 'Employees may carry over a maximum of 5 unused PTO days into the next calendar year.',
+        confidence: 0.92,
+      },
+      {
+        id: 'src-conf-2',
+        documentId: doc2.id,
+        documentTitle: '2024 HR Policy Updates',
+        section: 'PTO Policy Changes',
+        excerpt: 'Effective Jan 1, 2024, PTO carryover is no longer permitted. All unused time will be paid out.',
+        confidence: 0.99,
+      }
+    ];
+
+    return {
+      answer: "I found conflicting information regarding PTO carryover in our records. \n\nThe older '2023 Employee Handbook' states that up to 5 days can be carried over. However, the more recent '2024 HR Policy Updates' explicitly states that PTO carryover is no longer permitted and unused time is paid out instead. \n\nGiven the dates, the 2024 policy likely supersedes the older handbook, but you may want to verify with HR.",
+      sources,
+    };
+  }
+
+  // Edge Case 2: No Information Found (e.g. Wifi Password)
+  if (lowerQuery.includes('wifi') || lowerQuery.includes('austin')) {
+    return {
+      answer: "I've searched through the indexed documents (SOPs, playbooks, client notes, etc.) but I couldn't find any mention of the wifi password for the Austin office. \n\nThis type of information might be stored in IT's secure password manager rather than our general knowledge base documents.",
+      sources: [],
+    };
+  }
+
+  if (lowerQuery.includes('playbook') && lowerQuery.includes('q1')) {
+    const doc = mockDocuments.find((d) => d.title.includes('Playbook'));
+    if (!doc) return fallbackResponse();
+
+    const sources: Source[] = [
+      {
+        id: 'src-5',
+        documentId: doc.id,
+        documentTitle: doc.title,
+        section: 'Executive Summary',
+        excerpt: 'The Q1 focus shifts from inbound qualification to aggressive outbound targeting in the healthcare sector, specifically aiming for organizations with >500 employees.',
+        confidence: 0.91,
+      }
+    ];
+
+    return {
+      answer: "According to the Q1 Sales Playbook, the primary strategic shift for this quarter is moving away from inbound qualification and focusing heavily on aggressive outbound targeting. The specific target demographic is the healthcare sector, concentrating on organizations that have over 500 employees.",
+      sources,
+    };
+  }
+
   // Fallback realistic response when no direct match is found
   return fallbackResponse();
 };

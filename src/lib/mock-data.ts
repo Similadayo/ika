@@ -1,4 +1,16 @@
-import { Document, Source } from './types';
+import { Document, Source, Workspace, Conversation } from './types';
+
+export const mockWorkspaces: Workspace[] = [
+  { id: 'ws-1', name: 'Acme Ops', documentCount: 6 },
+  { id: 'ws-2', name: 'Acme Sales', documentCount: 14 },
+  { id: 'ws-3', name: 'Engineering', documentCount: 42 },
+];
+
+export const mockConversations: Conversation[] = [
+  { id: 'conv-1', title: 'Q1 Onboarding requirements', updatedAt: '2 hours ago' },
+  { id: 'conv-2', title: 'Vendor contract limits', updatedAt: 'Yesterday' },
+  { id: 'conv-3', title: 'Client handoff notes', updatedAt: '3 days ago' },
+];
 
 export const mockDocuments: Document[] = [
   {
@@ -54,6 +66,6 @@ export const mockDocuments: Document[] = [
 export const starterPrompts = [
   "What is our onboarding process for new clients?",
   "Summarize the Q1 sales playbook.",
-  "What are the approval steps for vendor contracts?",
-  "Find guidance on enterprise pricing exceptions.",
+  "Are there conflicting rules on PTO carryover?",
+  "What is the wifi password for the Austin office?",
 ];
